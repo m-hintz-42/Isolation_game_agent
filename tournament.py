@@ -14,6 +14,7 @@ order corrects for imbalances due to both starting position and initiative.
 import itertools
 import random
 import warnings
+import datetime
 
 from collections import namedtuple
 
@@ -23,7 +24,7 @@ from sample_players import (RandomPlayer, open_move_score,
 from game_agent import (MinimaxPlayer, AlphaBetaPlayer, custom_score,
                         custom_score_2, custom_score_3)
 
-NUM_MATCHES = 5  # number of matches against each opponent
+NUM_MATCHES = 100  # number of matches against each opponent
 TIME_LIMIT = 150  # number of milliseconds before timeout
 
 DESCRIPTION = """
@@ -47,7 +48,6 @@ def play_round(cpu_agent, test_agents, win_counts, num_matches):
     timeout_count = 0
     forfeit_count = 0
     for _ in range(num_matches):
-
         games = sum([[Board(cpu_agent.player, agent.player),
                       Board(agent.player, cpu_agent.player)]
                     for agent in test_agents], [])
@@ -79,6 +79,7 @@ def update(total_wins, wins):
 
 def play_matches(cpu_agents, test_agents, num_matches):
     """Play matches between the test agent and each cpu_agent individually. """
+    start_time = datetime.datetime.now()
     total_wins = {agent.player: 0 for agent in test_agents}
     total_timeouts = 0.
     total_forfeits = 0.
@@ -124,7 +125,9 @@ def play_matches(cpu_agents, test_agents, num_matches):
     if total_forfeits:
         print(("\nYour ID search forfeited {} games while there were still " +
                "legal moves available to play.\n").format(total_forfeits))
-
+    end_time = datetime.datetime.now()
+    time = end_time - start_time
+    print("\n", "TIME: ", time)
 
 def main():
 
